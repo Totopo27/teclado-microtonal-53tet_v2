@@ -1,0 +1,461 @@
+/* css/styles.css */
+
+:root {
+  --bg-color: #222222;
+  --text-color: #ffffff;
+  --white-key: #ffffff;
+  --purple-key: #702963;
+  --black-key: #555555;
+  --blue-key: #3498db;
+  --green-key: #09949b;
+  --hover-color: #f1c40f;
+  --key-width: 90px;
+  --key-height: 180px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow-x: hidden;
+  /* Mejorar experiencia táctil en móviles */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.header {
+  text-align: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.header h1 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.header p {
+  color: #3498db;
+  font-size: 1.1rem;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.control-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.control-group label {
+  font-weight: bold;
+}
+
+button, select {
+  padding: 10px 20px;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s, transform 0.1s;
+}
+
+button:hover {
+  background: #2980b9;
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+select {
+  background: #555555;
+  padding: 10px;
+}
+
+select optgroup {
+  background: #444;
+  color: #fff;
+  font-weight: bold;
+}
+
+select option {
+  background: #333;
+  padding: 5px;
+}
+
+.keyboard-wrapper {
+  position: relative;
+  width: 100%;
+  min-height: 1200px;
+  padding: 20px;
+  overflow: auto;
+}
+
+.keyboard-container {
+  position: relative;
+  width: 1500px;
+  height: 1200px;
+  margin: 0 auto;
+}
+
+.hexagon {
+  width: var(--key-width);
+  height: var(--key-height);
+  overflow: hidden;
+  visibility: hidden;
+  transform: rotate(30deg);
+  display: inline-block;
+  position: absolute;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+.hexagon:active {
+  transform: rotate(30deg) scale(0.95);
+}
+
+.hexagon-in1 {
+  display: block;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-60deg);
+}
+
+.hexagon-in2 {
+  display: block;
+  width: 100%;
+  height: 100%;
+  visibility: visible;
+  overflow: hidden;
+  transform: rotate(-60deg);
+  transition: background 0.2s ease-out;
+  position: relative;
+}
+
+.hexagon-in2-white {
+  background: var(--white-key);
+}
+
+.hexagon-in2-black {
+  background: var(--black-key);
+}
+
+.hexagon-in2-blue {
+  background: var(--blue-key);
+}
+
+.hexagon-in2-green {
+  background: var(--green-key);
+}
+
+.hexagon-in2-purple {
+  background: var(--purple-key);
+}
+
+.hexagon-in2:hover {
+  background: var(--hover-color) !important;
+}
+
+.hexagon-in2.active {
+  background: var(--hover-color) !important;
+  box-shadow: 0 0 20px rgba(241, 196, 15, 0.8);
+}
+
+.hexagon-in2.scale-highlight {
+  box-shadow: inset 0 0 20px rgba(241, 196, 15, 0.7);
+  border: 3px solid rgba(241, 196, 15, 0.9);
+}
+
+.hexagon-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(90deg);
+  font-size: 18px;
+  font-weight: bold;
+  color: #000000;
+  pointer-events: none;
+  user-select: none;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+}
+
+.info-panel {
+  text-align: center;
+  padding: 20px;
+  background: rgba(52, 152, 219, 0.1);
+  border-radius: 10px;
+  margin: 20px auto;
+  max-width: 800px;
+}
+
+.info-panel h3 {
+  margin-bottom: 20px;
+  color: #3498db;
+  font-size: 1.5rem;
+}
+
+.info-section {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.info-section h4 {
+  color: #ecf0f1;
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.info-item {
+  display: inline-block;
+  margin: 10px 20px;
+}
+
+.info-item strong {
+  color: #f1c40f;
+}
+
+/* Estilos para la sección de polifonía */
+.polyphony-section {
+  background: rgba(46, 204, 113, 0.1);
+  border: 2px solid rgba(46, 204, 113, 0.3);
+}
+
+.poly-counter {
+  background: #2ecc71;
+  color: white;
+  padding: 3px 12px;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  min-width: 30px;
+  display: inline-block;
+}
+
+.active-notes-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  min-height: 60px;
+  align-items: center;
+  padding: 10px;
+}
+
+.no-notes-message {
+  color: #95a5a6;
+  font-style: italic;
+}
+
+.note-chip {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  animation: noteAppear 0.2s ease-out;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.note-chip:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.note-chip .note-name {
+  font-size: 1rem;
+}
+
+.note-chip .note-freq {
+  font-size: 0.75rem;
+  opacity: 0.9;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+.note-chip .note-octave {
+  font-size: 0.7rem;
+  opacity: 0.8;
+}
+
+@keyframes noteAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Colores diferentes para diferentes octavas */
+.note-chip[data-octave="0"] {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.note-chip[data-octave="1"] {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.note-chip[data-octave="2"] {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.note-chip[data-octave="-1"] {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.note-chip[data-octave="-2"] {
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}
+
+.scale-combination {
+  text-align: center;
+  padding: 15px;
+  background: rgba(46, 204, 113, 0.1);
+  border-radius: 8px;
+  margin: 10px auto;
+  max-width: 800px;
+}
+
+.scale-combination h4 {
+  color: #2ecc71;
+  margin-bottom: 10px;
+}
+
+#combined-scales-list {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.scale-tag {
+  background: #2ecc71;
+  color: white;
+  padding: 5px 15px;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.scale-tag .remove-scale {
+  cursor: pointer;
+  font-weight: bold;
+  padding: 0 5px;
+}
+
+.scale-tag .remove-scale:hover {
+  color: #e74c3c;
+}
+
+.footer {
+  text-align: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.5);
+  margin-top: 30px;
+  font-size: 0.9rem;
+}
+
+.footer p {
+  margin: 5px 0;
+}
+
+.footer a {
+  color: #3498db;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 1600px) {
+  .keyboard-container {
+    transform: scale(0.9);
+    transform-origin: top center;
+  }
+}
+
+@media (max-width: 1400px) {
+  .keyboard-container {
+    transform: scale(0.75);
+  }
+}
+
+@media (max-width: 1200px) {
+  .keyboard-container {
+    transform: scale(0.6);
+  }
+  
+  .header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .controls {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 768px) {
+  .keyboard-container {
+    transform: scale(0.45);
+  }
+  
+  .info-panel {
+    max-width: 95%;
+  }
+  
+  .active-notes-grid {
+    gap: 8px;
+  }
+  
+  .note-chip {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+  
+  .header h1 {
+    font-size: 1.3rem;
+  }
+  
+  button, select {
+    padding: 8px 15px;
+    font-size: 12px;
+  }
+}

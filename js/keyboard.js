@@ -1,5 +1,5 @@
 // js/keyboard.js
-// Lógica del teclado hexagonal para 53-TET
+// Lógica del teclado hexagonal con soporte multi-touch
 
 // Estado de la aplicación
 let currentOctave = 0;
@@ -8,28 +8,28 @@ let currentScale = 'none';
 let combineMode = false;
 let combinedScales = new Set();
 
-// Obtener octava real de una tecla basada en su valor
+// Obtener octava real de una tecla
 function getRealOctave(value) {
-  // Las teclas base van del 172 al 277
-  // 172-224 = octava 0 (notas 0-52 de octava central baja)
-  // 225-277 = octava 1 (notas 0-52 de octava central alta)
-  
-  if (value >= 172 && value <= 224) return 0;
-  if (value >= 225 && value <= 277) return 1;
+  // Las teclas base van del 43 al 100
+  // 43-61 = octava 0 (baja)
+  // 62-80 = octava 1 (media)  
+  // 81-100 = octava 2 (alta)
+  if (value >= 43 && value <= 61) return 0;
+  if (value >= 62 && value <= 80) return 1;
+  if (value >= 81 && value <= 100) return 2;
   return 0;
 }
 
-// Calcular frecuencia con transposición de octava
+// Calcular frecuencia
 function getFrequency(value) {
-  // Ajustar el valor según la transposición de octava
-  const adjustedValue = value + (currentOctave * 53);
-  if (adjustedValue >= 0 && adjustedValue < arrayT53.length) {
-    return arrayT53[adjustedValue];
+  const adjustedValue = value + (currentOctave * 19);
+  if (adjustedValue >= 0 && adjustedValue < arrayT19.length) {
+    return arrayT19[adjustedValue];
   }
   return null;
 }
 
-// Generar teclado hexagonal
+// Generar teclado con soporte multi-touch
 function generateKeyboard() {
   const container = document.getElementById('keyboard-container');
   container.innerHTML = '';
@@ -48,6 +48,7 @@ function generateKeyboard() {
       <div class="hexagon-in1">
         <div class="hexagon-in2 ${colorClass}" data-value="${config.value}" data-name="${config.name}" data-note="${noteIndex}">
           <div class="hexagon-text">${config.text}</div>
+          <div class="hexagon-nota-text">${config.nota}</div>
         </div>
       </div>
     `;
@@ -69,7 +70,7 @@ function generateKeyboard() {
     
     // Eventos táctiles (para móviles) - SOPORTE MULTI-TOUCH
     innerHex.addEventListener('touchstart', (e) => {
-      e.preventDefault();
+      e.preventDefault(); // Prevenir eventos de mouse duplicados
       playNote(config);
     }, { passive: false });
     
@@ -98,8 +99,12 @@ function generateKeyboard() {
 
 // Manejar cuando el toque sale completamente de la pantalla
 function handleGlobalTouchEnd(e) {
+  // Si no quedan toques activos, detener todas las notas
   if (e.touches.length === 0) {
     // Opcional: descomentar si quieres que se detengan todas al levantar todos los dedos
+    // activeKeys.forEach((data, keyId) => {
+    //   stopNote(data.config);
+    // });
   }
 }
 
@@ -115,7 +120,7 @@ function playNote(config) {
   const element = document.getElementById(config.id).querySelector('.hexagon-in2');
   element.classList.add('active');
   
-  const adjustedValue = config.value + (currentOctave * 53);
+  const adjustedValue = config.value + (currentOctave * 19);
   const frequency = getFrequency(config.value);
   const realOctave = getRealOctave(config.value) + currentOctave;
   
@@ -126,6 +131,7 @@ function playNote(config) {
   
   // Actualizar panel de información - ÚLTIMA NOTA (monofonía)
   document.getElementById('current-note').textContent = `${config.name} (${config.text})`;
+  document.getElementById('current-nota').textContent = config.nota || config.name;
   document.getElementById('current-freq').textContent = frequency ? frequency.toFixed(2) : '-';
   document.getElementById('current-octave').textContent = realOctave;
   
@@ -141,7 +147,7 @@ function stopNote(config) {
   const element = document.getElementById(config.id).querySelector('.hexagon-in2');
   element.classList.remove('active');
   
-  const adjustedValue = config.value + (currentOctave * 53);
+  const adjustedValue = config.value + (currentOctave * 19);
   
   if (window.max && typeof window.max.outlet === 'function') {
     window.max.outlet(adjustedValue, config.name, "0");
@@ -151,7 +157,7 @@ function stopNote(config) {
   updatePolyphonyDisplay();
 }
 
-// Actualizar display de polifonía
+// Nueva función: Actualizar display de polifonía
 function updatePolyphonyDisplay() {
   const container = document.getElementById('active-notes-container');
   const counter = document.getElementById('poly-count');

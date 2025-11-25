@@ -1,5 +1,5 @@
 // js/app.js
-// Inicialización y gestión de eventos para 53-TET
+// Inicialización y gestión de eventos
 
 document.addEventListener('DOMContentLoaded', function() {
   // Generar teclado al cargar
@@ -26,17 +26,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const selectedScale = e.target.value;
     
     if (combineMode) {
+      // En modo combinación, agregar a la lista si no es 'none'
       if (selectedScale !== 'none') {
         combinedScales.add(selectedScale);
         updateCombinedScalesList();
+        // Resetear el selector para poder agregar más
         e.target.value = 'none';
       }
     } else {
+      // En modo normal, PRIMERO limpiar todo, LUEGO cambiar la escala
       currentScale = selectedScale;
       combinedScales.clear();
       updateCombinedScalesList();
     }
     
+    // Siempre actualizar la visualización después de cambiar
     updateScaleDisplay();
   });
 
@@ -47,11 +51,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (combineMode) {
       combinationPanel.style.display = 'block';
+      // Si hay una escala seleccionada, agregarla a las combinadas
       if (currentScale !== 'none') {
         combinedScales.add(currentScale);
       }
     } else {
       combinationPanel.style.display = 'none';
+      // Al desactivar, mantener solo la última escala como actual
       if (combinedScales.size > 0) {
         currentScale = Array.from(combinedScales).pop();
         document.getElementById('scale-selector').value = currentScale;
@@ -72,45 +78,63 @@ document.addEventListener('DOMContentLoaded', function() {
     updateScaleDisplay();
   });
 
-  // Mapeo QWERTY simplificado para el nuevo layout (32 teclas mapeadas)
+  // ============================================
+  // SOPORTE COMPLETO DE TECLADO QWERTY
+  // ============================================
+  
+  // Mapeo completo para la octava baja (19 notas: 0b-18b)
+  // Distribución en 3 filas del teclado QWERTY
   const keyMap = {
-    // Fila numérica: primeras 10 notas de octava alta
-    '1': '0', '2': '1', '3': '2', '4': '3', '5': '4',
-    '6': '5', '7': '6', '8': '7', '9': '8', '0': '9',
+    // Fila superior (QWERTY) - Notas 0-6
+    'q': '0b',   // Do (0)
+    'w': '1b',   // Do# (1)
+    'e': '2b',   // Reb (2)
+    'r': '3b',   // Re (3)
+    't': '4b',   // Re# (4)
+    'y': '5b',   // Mib (5)
+    'u': '6b',   // Mi (6)
     
-    // Fila QWERTY: siguientes 12 notas
-    'q': '10', 'w': '11', 'e': '12', 'r': '13', 't': '14',
-    'y': '15', 'u': '16', 'i': '17', 'o': '18', 'p': '19',
-    '[': '20', ']': '21',
+    // Fila media (ASDF) - Notas 7-13
+    'a': '7b',   // Mi# (7)
+    's': '8b',   // Fa (8)
+    'd': '9b',   // Fa# (9)
+    'f': '10b',  // Solb (10)
+    'g': '11b',  // Sol (11)
+    'h': '12b',  // Sol# (12)
+    'j': '13b',  // Lab (13)
     
-    // Fila ASDF: siguientes 10 notas
-    'a': '22', 's': '23', 'd': '24', 'f': '25', 'g': '26',
-    'h': '27', 'j': '28', 'k': '29', 'l': '30', ';': '31'
+    // Fila inferior (ZXCV) - Notas 14-18
+    'z': '14b',  // La (14)
+    'x': '15b',  // La# (15)
+    'c': '16b',  // Sib (16)
+    'v': '17b',  // Si (17)
+    'b': '18b'   // Si# (18)
   };
 
-  // Teclas de control
+  // Teclas especiales para controles
   const controlKeys = {
-    'ArrowUp': 'octave-up',
-    'ArrowDown': 'octave-down',
-    ' ': 'reset-octave'
+    'ArrowUp': 'octave-up',      // Flecha arriba: +8va
+    'ArrowDown': 'octave-down',  // Flecha abajo: -8va
+    ' ': 'reset-octave'          // Barra espaciadora: Reset octava
   };
 
+  // Set para rastrear teclas presionadas (evitar repetición)
   const pressedKeys = new Set();
 
-  // Manejo de teclas presionadas
+  // Evento keydown para tocar notas y controles
   document.addEventListener('keydown', (e) => {
-    // Prevenir comportamiento por defecto de teclas de control
+    // Prevenir comportamiento por defecto de las flechas y espacio
     if (controlKeys[e.key]) {
       e.preventDefault();
     }
 
-    // Manejar teclas de control
+    // Manejar controles de octava
     if (controlKeys[e.key] && !pressedKeys.has(e.key)) {
       pressedKeys.add(e.key);
       const buttonId = controlKeys[e.key];
       document.getElementById(buttonId).click();
       
-      // Feedback visual
+      // Feedback visual en el botón
       const button = document.getElementById(buttonId);
       button.style.transform = 'scale(0.95)';
       setTimeout(() => {
@@ -119,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
 
-    // Manejar teclas de notas musicales
+    // Manejar notas musicales
     const key = e.key.toLowerCase();
     if (keyMap[key] && !pressedKeys.has(key)) {
       pressedKeys.add(key);
@@ -130,17 +154,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Manejo de teclas liberadas
+  // Evento keyup para detener notas
   document.addEventListener('keyup', (e) => {
     const key = e.key.toLowerCase();
     
-    // Liberar teclas de control
+    // Limpiar teclas de control presionadas
     if (controlKeys[e.key]) {
       pressedKeys.delete(e.key);
       return;
     }
     
-    // Liberar teclas de notas
+    // Detener notas musicales
     if (keyMap[key]) {
       pressedKeys.delete(key);
       const config = keyConfigurations.find(c => c.id === keyMap[key]);
@@ -150,100 +174,33 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Mostrar ayuda de teclado en consola
+  // Mostrar ayuda de teclado al inicio (opcional)
   showKeyboardHelp();
 });
 
-// Función para mostrar ayuda de teclado en consola
+// Función para mostrar ayuda de teclado (opcional)
 function showKeyboardHelp() {
   console.log(`
-╔══════════════════════════════════════════════════════════════════╗
-║          CONTROLES DE TECLADO QWERTY - 53-TET                    ║
-╠══════════════════════════════════════════════════════════════════╣
-║   LAYOUT HEXAGONAL (32 notas mapeadas de 115 totales)           ║
-║                                                                  ║
-║  CONTROLES DE OCTAVA:                                            ║
-║  ↑ Flecha Arriba   → +8va (subir octava)                        ║
-║  ↓ Flecha Abajo    → -8va (bajar octava)                        ║
-║  Espacio           → Reset octava a 0                            ║
-╠══════════════════════════════════════════════════════════════════╣
-║   DISTRIBUCIÓN DE TECLAS MUSICALES:                              ║
-║                                                                  ║
-║   Fila 1-0:   Notas 0-9 (octava alta)                           ║
-║   [1][2][3][4][5][6][7][8][9][0]                                ║
-║    C C+ Cn C#- C# Db Db+ Dn- D- D                              ║
-║                                                                  ║
-║   Fila Q-]:   Notas 10-21                                       ║
-║   [Q][W][E][R][T][Y][U][I][O][P][[]]                            ║
-║   D+ Dn+ D#- D# Eb Eb+ En E- E E+ E#                            ║
-║                                                                  ║
-║   Fila A-;:   Notas 22-31                                       ║
-║   [A][S][D][F][G][H][J][K][L][;]                                ║
-║    F F+ Fn F#- F# Gb Gb+ Gn- G- G                              ║
-║                                                                  ║
-╠══════════════════════════════════════════════════════════════════╣
-║   TIPS:                                                          ║
-║   • Mantén varias teclas presionadas para acordes polifónicos   ║
-║   • Usa las flechas mientras tocas para transposición dinámica  ║
-║   • El resto de notas se tocan con el ratón/touch               ║
-║   • Presiona F12 para ver esta ayuda en la consola del navegador║
-╚══════════════════════════════════════════════════════════════════╝
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-                    INFORMACIÓN TÉCNICA 53-TET
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Sistema: 53 divisiones iguales de la octava (53-TET / 53-EDO)
-Intervalo por paso: ~22.64 centavos
-Fórmula de frecuencia: f(n) = 27.5 × 2^(n/53)
-
-Intervalos principales:
-─────────────────────
-• Semitono cromático:  4 pasos  (~90.6¢)  - Error: +5.2¢
-• Semitono diatónico:  5 pasos  (~113.2¢) - Error: +1.2¢
-• Tono:                9 pasos  (~203.8¢) - Error: -0.2¢
-• Tercera menor:      13 pasos  (~294.3¢) - Error: -10.0¢
-• Tercera mayor:      17 pasos  (~384.9¢) - Error: -1.4¢
-• Cuarta justa:       22 pasos  (~498.1¢) - Error: +0.1¢
-• Tritono:            26 pasos  (~588.7¢) - Error: -11.3¢
-• Quinta justa:       31 pasos  (~701.9¢) - Error: -0.1¢  ★ EXCELENTE
-• Sexta menor:        35 pasos  (~792.5¢) - Error: +7.6¢
-• Sexta mayor:        40 pasos  (~905.7¢) - Error: +1.7¢
-• Séptima menor:      44 pasos  (~996.2¢) - Error: -7.8¢
-• Séptima mayor:      49 pasos (~1109.4¢) - Error: -2.6¢
-
-Ventajas del 53-TET:
-──────────────────
-✓ Precisión excepcional en quintas justas (error: 0.07¢)
-✓ Excelente aproximación de terceras mayores (error: 1.4¢)
-✓ Un paso ≈ coma pitagórica (23.46¢)
-✓ Compatible con notación tradicional occidental
-✓ Ideal para música que requiere entonación justa
-✓ Sistema históricamente significativo (siglo I a.C.)
-
-Compositores y teóricos:
-─────────────────────
-• Jing Fang (siglo I a.C.) - Primera propuesta conocida
-• Nicholas Mercator (siglo XVII) - Redescubrimiento en Europa
-• Isaac Newton - Propuso sistema basado en 53 divisiones
-• R.H.M. Bosanquet (1876) - Construyó armonio de 53 tonos
-• Adriaan Fokker - Estudió y promovió el 53-TET
-• Joel Mandelbaum - Compositor que usó extensivamente 53-TET
-
-Colores de teclas:
-────────────────
-⬜ Blanco:  Notas naturales (C, D, E, F, G, A, B)
-⬛ Negro:   Sostenidos y bemoles tradicionales (#, b)
-🔵 Azul:    Microalteraciones (+, -)
-🟢 Verde:   Neutrales (n) - entre natural y alterada
-🟣 Púrpura: Microalteraciones extremas (##-, bb+)
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Total de teclas en el teclado: 115 hexagonales (layout optimizado)
-Total de notas únicas: 53 por octava
-Teclas mapeadas a QWERTY: 32 de 115
-
-¡Explora las posibilidades microtonales del 53-TET! 🎹✨
+╔════════════════════════════════════════════════════════╗
+║          CONTROLES DE TECLADO QWERTY                   ║
+╠════════════════════════════════════════════════════════╣
+║                                                        ║
+║  🎹 OCTAVA BAJA (Notas 0-18):                         ║
+║                                                        ║
+║  Fila Q: Q W E R T Y U  → Notas 0-6                   ║
+║          Do Do# Re Re# Mi♭ Mi Mi#                     ║
+║                                                        ║
+║  Fila A: A S D F G H J  → Notas 7-13                  ║
+║          Mi# Fa Fa# Sol♭ Sol Sol# La♭                 ║
+║                                                        ║
+║  Fila Z: Z X C V B      → Notas 14-18                 ║
+║          La La# Si♭ Si Si#                            ║
+║                                                        ║
+║  🎚️ CONTROLES:                                         ║
+║  ↑ Flecha Arriba   → +8va (subir octava)              ║
+║  ↓ Flecha Abajo    → -8va (bajar octava)              ║
+║  Espacio           → Reset octava                      ║
+║                                                        ║
+╚════════════════════════════════════════════════════════╝
   `);
 }

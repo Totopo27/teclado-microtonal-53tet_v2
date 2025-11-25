@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="description" content="Teclado hexagonal interactivo para música microtonal en temperamento 53-TET">
-  <meta name="keywords" content="música microtonal, 53-TET, teclado hexagonal, Max/MSP">
-  <meta name="author" content="LuisAraya">
+  <meta name="description" content="Teclado hexagonal interactivo para música microtonal en temperamento 19-TET">
+  <meta name="keywords" content="música microtonal, 19-TET, teclado hexagonal, Max/MSP">
+  <meta name="author" content="Tu Nombre">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
-  <title>Teclado Microtonal 53-TET</title>
+  <title>Teclado Microtonal 19-TET</title>
   <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
   <div class="header">
-    <h1>Teclado Microtonal 53-TET</h1>
-    <p>Sistema de temperamento igual de 53 notas por octava</p>
+    <h1>Teclado Microtonal 19-TET</h1>
+    <p>Sistema de temperamento igual de 19 notas por octava</p>
   </div>
 
   <div class="controls">
@@ -23,28 +25,18 @@
       <button id="reset-octave">Reset Octava</button>
       <button id="octave-up">+8va</button>
     </div>
-    
+
     <div class="control-group">
       <label for="scale-selector">Escala:</label>
       <select id="scale-selector">
         <option value="none">Ninguna</option>
-        <optgroup label="Modos Griegos">
-          <option value="ionian">Jónico (Mayor)</option>
-          <option value="dorian">Dórico</option>
-          <option value="phrygian">Frigio</option>
-          <option value="lydian">Lidio</option>
-          <option value="mixolydian">Mixolidio</option>
-          <option value="aeolian">Eólico (Menor)</option>
-          <option value="locrian">Locrio</option>
-        </optgroup>
-        <optgroup label="Escalas Especiales">
-          <option value="chromatic">Cromática (53 notas)</option>
-          <option value="wholeTone">Tonos Enteros</option>
-          <option value="pentatonicMajor">Pentatónica Mayor</option>
-          <option value="pentatonicMinor">Pentatónica Menor</option>
-          <option value="blues">Blues</option>
-          <option value="harmonicMinor">Armónica Menor</option>
-        </optgroup>
+        <option value="ionian">Jónico (Mayor)</option>
+        <option value="dorian">Dórico</option>
+        <option value="phrygian">Frigio</option>
+        <option value="lydian">Lidio</option>
+        <option value="mixolydian">Mixolidio</option>
+        <option value="aeolian">Eólico (Menor)</option>
+        <option value="locrian">Locrio</option>
       </select>
     </div>
 
@@ -54,6 +46,7 @@
         Combinar escalas
       </label>
       <button id="clear-scales" style="background: #e74c3c;">Limpiar escalas</button>
+      <button id="theme-toggle" aria-label="Cambiar tema">Modo: Oscuro</button>
     </div>
   </div>
 
@@ -64,12 +57,15 @@
 
   <div class="info-panel">
     <h3>Información en tiempo real</h3>
-    
+
     <!-- Modo Monofonía -->
     <div class="info-section">
       <h4>Última nota tocada</h4>
       <div class="info-item">
         <strong>Nota:</strong> <span id="current-note">-</span>
+      </div>
+      <div class="info-item">
+        <strong>Nombre:</strong> <span id="current-nota">-</span>
       </div>
       <div class="info-item">
         <strong>Frecuencia:</strong> <span id="current-freq">-</span> Hz
@@ -92,9 +88,17 @@
     <div class="keyboard-container" id="keyboard-container"></div>
   </div>
 
+  <footer class="footer">
+    <p>Desarrollado para exploración musical microtonal | Compatible con Max/MSP</p>
+    <p>Soporte multi-touch para dispositivos móviles 📱</p>
+  </footer>
+
   <script src="js/config.js"></script>
   <script src="js/scales.js"></script>
   <script src="js/keyboard.js"></script>
   <script src="js/app.js"></script>
+  <script src="microtonal-websocket-client.js"></script>
+  <script src="js/theme.js"></script>
 </body>
+
 </html>

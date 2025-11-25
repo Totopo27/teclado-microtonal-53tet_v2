@@ -15,13 +15,15 @@
   --button-bg: rgba(255, 255, 255, 0.05);
   --button-hover-bg: rgba(255, 255, 255, 0.3);
 
-  /* Keyboard Specific - 19-TET */
+  /* Keyboard Specific - 53-TET */
   --white-key: #ffffff;
+  --purple-key: #702963;
   --black-key: #555555;
   --blue-key: #3498db;
+  --green-key: #09949b;
   --hover-color: #f1c40f;
-  --key-width: 180px;
-  --key-height: 90px;
+  --key-width: 90px;
+  --key-height: 180px;
 }
 
 body.light-mode {
@@ -71,6 +73,11 @@ body {
   margin-bottom: 10px;
 }
 
+.header p {
+  color: var(--accent);
+  font-size: 1.1rem;
+}
+
 .controls {
   display: flex;
   justify-content: center;
@@ -116,18 +123,30 @@ select {
   padding: 10px;
 }
 
+select optgroup {
+  background: var(--bg-main);
+  color: var(--text-main);
+  font-weight: bold;
+}
+
+select option {
+  background: var(--bg-main);
+  color: var(--text-main);
+  padding: 5px;
+}
+
 .keyboard-wrapper {
   position: relative;
   width: 100%;
-  min-height: 900px;
+  min-height: 1200px;
   padding: 20px;
   overflow: auto;
 }
 
 .keyboard-container {
   position: relative;
-  width: 1020px;
-  height: 850px;
+  width: 1500px;
+  height: 1200px;
   margin: 0 auto;
 }
 
@@ -136,19 +155,15 @@ select {
   height: var(--key-height);
   overflow: hidden;
   visibility: hidden;
-  transform: rotate(120deg);
+  transform: rotate(30deg);
   display: inline-block;
   position: absolute;
   cursor: pointer;
   transition: transform 0.1s;
-  /* Optimizaciones para táctil */
-  touch-action: none;
-  -webkit-user-select: none;
-  user-select: none;
 }
 
 .hexagon:active {
-  transform: rotate(120deg) scale(0.95);
+  transform: rotate(30deg) scale(0.95);
 }
 
 .hexagon-in1 {
@@ -168,15 +183,13 @@ select {
   transform: rotate(-60deg);
   transition: background 0.2s ease-out;
   position: relative;
-  /* Mejorar área de toque en móviles */
-  touch-action: none;
 }
 
 .hexagon-in2-white {
   background: var(--white-key);
 }
 
-.hexagon-in2-dark-gray {
+.hexagon-in2-black {
   background: var(--black-key);
 }
 
@@ -184,8 +197,21 @@ select {
   background: var(--blue-key);
 }
 
+.hexagon-in2-green {
+  background: var(--green-key);
+}
+
+.hexagon-in2-purple {
+  background: var(--purple-key);
+}
+
+.hexagon-in2:hover {
+  background: var(--hover-color) !important;
+}
+
 .hexagon-in2.active {
   background: var(--hover-color) !important;
+  box-shadow: 0 0 20px rgba(241, 196, 15, 0.8);
 }
 
 .hexagon-in2.scale-highlight {
@@ -195,35 +221,15 @@ select {
 
 .hexagon-text {
   position: absolute;
-  top: 30%;
-  /* Posicionado en la mitad superior */
+  top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  /* Centrado horizontalmente */
+  transform: translate(-50%, -50%) rotate(90deg);
   font-size: 18px;
   font-weight: bold;
   color: #000000;
   pointer-events: none;
   user-select: none;
   text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
-  white-space: nowrap;
-}
-
-.hexagon-nota-text {
-  position: absolute;
-  top: 70%;
-  /* Posicionado en la mitad inferior */
-  left: 50%;
-  transform: translate(-50%, -50%);
-  /* Centrado horizontalmente */
-  font-size: 14px;
-  font-weight: normal;
-  color: #333333;
-  pointer-events: none;
-  user-select: none;
-  text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.3);
-  white-space: nowrap;
-  opacity: 0.9;
 }
 
 .info-panel {
@@ -330,6 +336,7 @@ select {
   background: rgba(255, 255, 255, 0.2);
   padding: 2px 6px;
   border-radius: 10px;
+  font-size: 0.75rem;
 }
 
 .note-chip .note-octave {
@@ -342,7 +349,6 @@ select {
     opacity: 0;
     transform: scale(0.8) translateY(10px);
   }
-
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
@@ -407,6 +413,10 @@ select {
   font-size: 0.9rem;
 }
 
+.footer p {
+  margin: 5px 0;
+}
+
 .footer a {
   color: var(--accent);
   text-decoration: none;
@@ -416,14 +426,21 @@ select {
   text-decoration: underline;
 }
 
-@media (max-width: 1100px) {
+/* Responsive */
+@media (max-width: 1600px) {
   .keyboard-container {
-    transform: scale(0.8);
+    transform: scale(0.9);
     transform-origin: top center;
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1400px) {
+  .keyboard-container {
+    transform: scale(0.75);
+  }
+}
+
+@media (max-width: 1200px) {
   .keyboard-container {
     transform: scale(0.6);
   }
@@ -437,8 +454,11 @@ select {
   }
 }
 
-/* Responsive */
 @media (max-width: 768px) {
+  .keyboard-container {
+    transform: scale(0.45);
+  }
+
   .info-panel {
     max-width: 95%;
   }
@@ -450,5 +470,15 @@ select {
   .note-chip {
     padding: 6px 12px;
     font-size: 0.85rem;
+  }
+
+  .header h1 {
+    font-size: 1.3rem;
+  }
+
+  button,
+  select {
+    padding: 8px 15px;
+    font-size: 12px;
   }
 }
